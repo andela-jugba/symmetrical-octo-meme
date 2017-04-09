@@ -15,27 +15,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Yarn
-          command: |
-            apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 68576280 86E50310
-            echo "deb http://deb.nodesource.com/node_7.x jessie main" | tee /etc/apt/sources.list.d/nodesource.list
-            echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-            apt-get update -qq
-            apt-get install -y -qq nodejs yarn
-      - restore_cache:
-          key: projectname-{{ .Branch }}-{{ checksum "yarn.lock" }}
-      - run:
           name: Install Dependencies
-          command: yarn && pip install -r requirements.txt
-      - save_cache:
-          key: projectname-{{ .Branch }}-{{ checksum "yarn.lock" }}
-          paths:
-            - "/home/ubuntu/.yarn-cache"
+          command: pip install -r requirements.txt
       - run:
           name: Run Tests
           command: python manage.py test
       - store_artifacts:
-          path: test-reports/coverage
+          path: cover/coverage
           destination: reports
       - store_test_results:
-          path: "test-reports/"
+          path: "cover/"
